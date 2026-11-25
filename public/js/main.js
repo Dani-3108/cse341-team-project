@@ -87,9 +87,106 @@ const hookTrainsCatalog = async () => {
         }
     }
 };
+const fillFilterOptions = (selectEl, values, selectedValue) => {
+    if (!selectEl) {
+        return;
+    }
+
+    values.forEach((value) => {
+        const optionEl = document.createElement('option');
+        optionEl.value = value;
+        optionEl.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+        selectEl.appendChild(optionEl);
+    });
+
+    if (values.includes(selectedValue)) {
+        selectEl.value = selectedValue;
+    }
+};
+
+const hookTripsCatalog = async () => {
+    const listEl = document.getElementById('trips-list');
+    const templateEl = document.getElementById('trip-card-template');
+    const loadingEl = document.getElementById('trips-loading');
+    const errorEl = document.getElementById('trips-error');
+
+    if (!listEl || !templateEl) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/trips');
+        if (!response.ok) {
+            throw new Error(`Failed to load trips (${response.status})`);
+        }
+
+        const payload = await response.json();
+        const trips = payload.trips || [];
+        const fragment = document.createDocumentFragment();
+
+        const params = new URLSearchParams(window.location.search);
+        const regions = [...new Set(trips.map((trip) => trip.region))];
+        const seasons = [...new Set(trips.map((trip) => trip.bestSeason))];
+
+        fillFilterOptions(document.getElementById('region-filter'), regions, params.get('region'));
+        fillFilterOptions(document.getElementById('season-filter'), seasons, params.get('season'));
+
+        const selectedRegion = params.get('region');
+        const selectedSeason = params.get('season');
+
+        const visibleTrips = trips.filter((trip) => {
+            const matchesRegion = !selectedRegion || selectedRegion === 'all' || trip.region === selectedRegion;
+            const matchesSeason = !selectedSeason || selectedSeason === 'all' || trip.bestSeason === selectedSeason;
+            return matchesRegion && matchesSeason;
+        });
+
+        visibleTrips.forEach((trip) => {
+            const card = templateEl.content.cloneNode(true);
+
+            card.querySelector('[data-field="card"]').classList.add(trip.region);
+            card.querySelector('[data-field="name"]').textContent = trip.name;
+            card.querySelector('[data-field="region"]').textContent = trip.region;
+            card.querySelector('[data-field="start"]').textContent = trip.startStation;
+            card.querySelector('[data-field="end"]').textContent = trip.endStation;
+            card.querySelector('[data-field="duration"]').textContent = trip.duration;
+            card.querySelector('[data-field="distance"]').textContent = `${trip.distance}km`;
+            card.querySelector('[data-field="description"]').textContent = trip.description;
+
+            const seasonEl = card.querySelector('[data-field="season"]');
+            seasonEl.classList.add(`season-${trip.bestSeason}`);
+            seasonEl.textContent = `Best in ${trip.bestSeason}`;
+
+            card.querySelector('[data-field="link"]').href = `/trips/${trip.id}`;
+
+            const highlightsEl = card.querySelector('[data-field="highlights"]');
+            trip.highlights.forEach((highlight) => {
+                const tagEl = document.createElement('span');
+                tagEl.className = 'highlight-tag';
+                tagEl.textContent = highlight;
+                highlightsEl.appendChild(tagEl);
+            });
+
+            fragment.appendChild(card);
+        });
+
+        listEl.replaceChildren(fragment);
+        if (loadingEl) {
+            loadingEl.hidden = true;
+        }
+    } catch (error) {
+        if (loadingEl) {
+            loadingEl.hidden = true;
+        }
+        if (errorEl) {
+            errorEl.hidden = false;
+            errorEl.textContent = 'Unable to load trips right now. Please try again in a moment.';
+        }
+    }
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     hookRegionSorter();
     hookSeasonSorter();
     hookTrainsCatalog();
+    hookTripsCatalog();
 });
