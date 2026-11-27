@@ -68,34 +68,42 @@
             </div>
         </div>
 
-        <% if (details.schedules && details.schedules.length > 0) { %>
-        <div class="route-schedules">
+        <div class="route-schedules" id="trip-schedules" data-trip-id="<%= details.id %>">
             <h2>Available Schedules</h2>
-            <div class="schedules-grid">
-                <% details.schedules.forEach(function(schedule) { %>
+
+            <label for="schedule-month">Month</label>
+            <select id="schedule-month">
+                <option value="">All months</option>
+                <% ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].forEach(function(monthName, index) { %>
+                <option value="<%= index + 1 %>"><%= monthName %></option>
+                <% }); %>
+            </select>
+
+            <div class="trains-state" id="schedules-loading">Loading schedules...</div>
+            <p id="schedules-empty" hidden>No schedules for this selection.</p>
+            <p id="schedules-error" hidden></p>
+
+            <div class="schedules-grid" id="schedules-list"></div>
+
+            <template id="schedule-card-template">
                 <div class="schedule-card">
                     <div class="schedule-times">
                         <div class="time-block">
                             <span class="time-label">Departs</span>
-                            <span class="time-value"><%= schedule.departureTime %></span>
+                            <span class="time-value" data-field="departure"></span>
                         </div>
                         <span class="time-arrow">→</span>
                         <div class="time-block">
                             <span class="time-label">Arrives</span>
-                            <span class="time-value"><%= schedule.arrivalTime %></span>
+                            <span class="time-value" data-field="arrival"></span>
                         </div>
                     </div>
-                    <div class="schedule-days">
-                        <% schedule.daysOfWeek.forEach(function(day) { %>
-                        <span class="day-badge"><%= day.substring(0, 3) %></span>
-                        <% }); %>
-                    </div>
-                    <a href="/trips/booking/<%= schedule.id %>" class="book-btn">Book Now</a>
+                    <div class="schedule-days" data-field="days"></div>
+                    <a class="book-btn" data-field="book">Book Now</a>
+                    <span class="time-label" data-field="unavailable" hidden>Unavailable</span>
                 </div>
-                <% }); %>
-            </div>
+            </template>
         </div>
-        <% } %>
     </div>
 </article>
 
