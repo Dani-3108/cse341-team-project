@@ -1,6 +1,5 @@
 // src/controllers/trips.js
 
-import { getDb } from '../db/connect.js';
 import {
     getAllTrips as findAllTrips,
     getTripById as findTripById,
@@ -59,8 +58,6 @@ export const tripDetailsPage = async (req, res, next) => {
             notFoundError.status = 404;
             return next(notFoundError);
         }
-
-        details.schedules = await getDb().collection('schedules').find({ tripId }).toArray();
 
         return res.render('trips/details', { title: 'Trip Details', details });
     } catch (error) {

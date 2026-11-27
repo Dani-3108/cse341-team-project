@@ -184,9 +184,82 @@ const hookTripsCatalog = async () => {
     }
 };
 
+const hookTripSchedules = () => {
+    const sectionEl = document.getElementById('trip-schedules');
+    if (!sectionEl) {
+        return;
+    }
+
+    const tripId = sectionEl.dataset.tripId;
+    const monthSelectEl = document.getElementById('schedule-month');
+    const listEl = document.getElementById('schedules-list');
+    const templateEl = document.getElementById('schedule-card-template');
+    const loadingEl = document.getElementById('schedules-loading');
+    const emptyEl = document.getElementById('schedules-empty');
+    const errorEl = document.getElementById('schedules-error');
+
+    const loadSchedules = async () => {
+        loadingEl.hidden = false;
+        emptyEl.hidden = true;
+        errorEl.hidden = true;
+
+        const query = monthSelectEl.value ? `?month=${encodeURIComponent(monthSelectEl.value)}` : '';
+
+        try {
+            const response = await fetch(`/api/trips/${encodeURIComponent(tripId)}/schedules${query}`);
+            if (!response.ok) {
+                throw new Error(`Failed to load schedules (${response.status})`);
+            }
+
+            const payload = await response.json();
+            const schedules = payload.schedules || [];
+            const fragment = document.createDocumentFragment();
+
+            schedules.forEach((schedule) => {
+                const card = templateEl.content.cloneNode(true);
+
+                card.querySelector('[data-field="departure"]').textContent = schedule.departureTime;
+                card.querySelector('[data-field="arrival"]').textContent = schedule.arrivalTime;
+
+                const daysEl = card.querySelector('[data-field="days"]');
+                schedule.daysOfWeek.forEach((day) => {
+                    const dayEl = document.createElement('span');
+                    dayEl.className = 'day-badge';
+                    dayEl.textContent = day.substring(0, 3);
+                    daysEl.appendChild(dayEl);
+                });
+
+                const bookEl = card.querySelector('[data-field="book"]');
+                const unavailableEl = card.querySelector('[data-field="unavailable"]');
+                if (schedule.status) {
+                    bookEl.href = `/trips/booking/${schedule.id}`;
+                } else {
+                    bookEl.hidden = true;
+                    unavailableEl.hidden = false;
+                }
+
+                fragment.appendChild(card);
+            });
+
+            listEl.replaceChildren(fragment);
+            emptyEl.hidden = schedules.length > 0;
+        } catch {
+            listEl.replaceChildren();
+            errorEl.hidden = false;
+            errorEl.textContent = 'Unable to load schedules right now. Please try again in a moment.';
+        } finally {
+            loadingEl.hidden = true;
+        }
+    };
+
+    monthSelectEl.addEventListener('change', loadSchedules);
+    loadSchedules();
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     hookRegionSorter();
     hookSeasonSorter();
     hookTrainsCatalog();
     hookTripsCatalog();
+    hookTripSchedules();
 });
