@@ -1,6 +1,6 @@
 import { getAllBookings as findAllBookings, createBooking } from '../models/bookings.js';
 import { getDb } from '../db/connect.js';
-import { generatebookingCode } from '../includes/helpers.js';
+import { generateBookingCode } from '../includes/helpers.js';
 import { getScheduleById } from '../models/schedules.js';
 import { getTripById } from '../models/trips.js';
 
@@ -15,20 +15,24 @@ export async function getAllBookings(req, res) {
     }
 }
 
-const bookingPage = async (req, res) => {
+const bookingPage = async (req, res, next) => {
     const { scheduleId } = req.params;
 
     const db = getDb();
     const schedule = await getScheduleById(Number(scheduleId));
 
     if (!schedule) {
-        return res.status(404).send('Schedule not found');
+        const error = new Error('Schedule not found');
+        error.status = 404;
+        return next(error);
     }
 
     const trip = await getTripById(schedule.tripId);
 
     if (!trip) {
-        return res.status(404).send('Trip not found');
+        const error = new Error('Trip not found');
+        error.status = 404;
+        return next(error);
     }
     const ticketClasses = await db.collection('ticketClasses').find({}).toArray();
     const ticketOptions = ticketClasses.map((ticketClass) => ({
@@ -49,7 +53,7 @@ const bookingPage = async (req, res) => {
 const processBookingRequest = async (req, res) => {
     try {
         const booking = await createBooking({
-            id: generatebookingCode(),
+            id: generateBookingCode(),
             scheduleId: Number(req.body.scheduleId),
             tripId: req.body.tripId,
             ticketClass: req.body.ticketClass,

@@ -1,25 +1,25 @@
 <%- include('../partials/header') %>
-<article class="booking-page">
-    <div class="booking-header">
+<article class="confirmation-page">
+    <div class="confirmation-header">
         <div class="success-icon">
             <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="32" cy="32" r="32" fill="var(--clr-primary)"/>
                 <path d="M20 32L28 40L44 24" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>
-        <h1 class="booking-title"><%= title %></h1>
-        <p class="booking-message">Your scenic railway journey has been confirmed. We've sent the details to your email.</p>
+        <h1 class="confirmation-title"><%= title %></h1>
+        <p class="confirmation-message">Your scenic railway journey has been confirmed. We've sent the details to your email.</p>
         
-        <div class="booking-reference">
+        <div class="confirmation-reference">
             <span class="reference-label">Booking Reference</span>
             <span class="reference-number"><%= booking.id %></span>
         </div>
     </div>
 
-    <div class="booking-content">
-        <section class="booking-details">
+    <div class="confirmation-content">
+        <section class="confirmation-details">
             <h2 class="section-title">Booking Details</h2>
-            
+            <p class="confirmation-message">Here are the details of your confirmed trip.</p>
             <div class="details-grid">
                 <div class="detail-card">
                     <div class="detail-icon">🎫</div>
@@ -130,7 +130,7 @@
             </ul>
         </section>
 
-        <div class="booking-actions">
+        <div class="confirmation-actions">
             <button onclick="window.print()" class="btn btn-secondary">
                 <span class="btn-icon">🖨️</span>
                 Print booking

@@ -2,7 +2,7 @@
  * Generates a unique Japan Rail like booking code for bookings.
  * @returns {string} A unique booking code.
  */
-const generatebookingCode = () => {
+const generateBookingCode = () => {
     return 'JR' + Math.random().toString(36).substring(2, 10).toUpperCase();
 };
 
@@ -26,4 +26,4 @@ const yenToUsd = (yen) => {
     return yen * exchangeRate;
 };
 
-export { generatebookingCode, kmToMiles, yenToUsd };
+export { generateBookingCode, kmToMiles, yenToUsd };
