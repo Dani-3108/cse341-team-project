@@ -1,0 +1,25 @@
+<h1><%= title %></h1>
+
+<section id="bookings-admin">
+    <p id="bookings-loading">Loading bookings...</p>
+
+    <p id="bookings-empty" hidden>No bookings found.</p>
+
+    <p id="bookings-error" hidden>Error loading bookings.</p>
+
+    <div id="bookings-list"></div>
+
+    <template id="booking-template">
+        <article class="booking-card">
+            <h2 class="booking-id"></h2>
+            <p>Trip: <span class="booking-trip"></span></p>
+            <p>Schedule: <span class="booking-schedule"></span></p>
+            <p>Class: <span class="booking-class"></span></p>
+            <p>Day: <span class="booking-day"></span></p>
+            <p>Created: <span class="booking-date"></span></p>
+
+            <h3>Passengers</h3>
+            <p class="booking-passengers"></p>
+        </article>
+    </template>
+</section>

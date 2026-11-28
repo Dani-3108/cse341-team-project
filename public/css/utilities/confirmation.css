@@ -1,8 +1,8 @@
-article.confirmation-page {
+article.booking-page {
     max-width: var(--content-max-width);
     margin: 0 auto;
 
-    .confirmation-header {
+    .booking-header {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -24,14 +24,14 @@ article.confirmation-page {
             }
         }
 
-        .confirmation-title {
+        .booking-title {
             font-size: var(--font-size-2xl);
             line-height: var(--line-height-sm);
             color: var(--clr-text-primary);
             margin: 0;
         }
 
-        .confirmation-message {
+        .booking-message {
             font-size: var(--font-size-md);
             line-height: var(--line-height-lg);
             color: var(--clr-text-secondary);
@@ -68,7 +68,7 @@ article.confirmation-page {
         }
     }
 
-    .confirmation-content {
+    .booking-content {
         display: flex;
         flex-direction: column;
         gap: var(--space-2xl);
@@ -270,7 +270,7 @@ article.confirmation-page {
             }
         }
 
-        .confirmation-actions {
+        .booking-actions {
             display: flex;
             flex-direction: column;
             gap: var(--space-md);
@@ -322,14 +322,14 @@ article.confirmation-page {
     }
 
     @media (min-width: 768px) {
-        .confirmation-header {
+        .booking-header {
             padding: var(--space-2xl);
 
-            .confirmation-title {
+            .booking-title {
                 font-size: var(--font-size-3xl);
             }
 
-            .confirmation-message {
+            .booking-message {
                 font-size: var(--font-size-lg);
             }
 
@@ -348,7 +348,7 @@ article.confirmation-page {
             }
         }
 
-        .confirmation-content {
+        .booking-content {
             .booking-details {
                 .details-grid {
                     grid-template-columns: repeat(2, 1fr);
@@ -371,7 +371,7 @@ article.confirmation-page {
                 }
             }
 
-            .confirmation-actions {
+            .booking-actions {
                 flex-direction: row;
                 justify-content: center;
                 gap: var(--space-lg);
@@ -384,7 +384,7 @@ article.confirmation-page {
     }
 
     @media (min-width: 1024px) {
-        .confirmation-content {
+        .booking-content {
             .booking-details {
                 .details-grid {
                     grid-template-columns: repeat(4, 1fr);
@@ -406,12 +406,12 @@ article.confirmation-page {
 }
 
 @media print {
-    article.confirmation-page {
-        .confirmation-actions {
+    article.booking-page {
+        .booking-actions {
             display: none;
         }
 
-        .confirmation-header {
+        .booking-header {
             background-color: white;
             border: 2px solid var(--clr-primary);
         }

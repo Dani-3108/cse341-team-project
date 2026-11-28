@@ -2,6 +2,7 @@
 import { Router } from 'express';
 import { getAllTrips, getTripById } from '../controllers/trips.js';
 import { getSchedulesForTrip, getSchedulesForTripAndMonth } from '../controllers/schedules.js';
+import { getAllBookings } from '../controllers/bookings.js';
 
 const router = Router();
 
@@ -177,5 +178,67 @@ router.get('/trips/:id/schedules', (req, res) => {
 
     return getSchedulesForTripAndMonth(req, res);
 });
+
+/**
+ * @swagger
+ * /api/bookings:
+ *   get:
+ *     summary: Get all bookings
+ *     tags: [Bookings]
+ *     responses:
+ *       200:
+ *         description: All bookings, wrapped in a bookings array
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 bookings:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                         example: JR4K2X9Q1A
+ *                       scheduleId:
+ *                         type: number
+ *                         example: 1
+ *                       tripId:
+ *                         type: string
+ *                         example: alpine-panorama
+ *                       ticketClass:
+ *                         type: string
+ *                       selectedDay:
+ *                         type: string
+ *                         example: monday
+ *                       passengers:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             firstName:
+ *                               type: string
+ *                             lastName:
+ *                               type: string
+ *                             email:
+ *                               type: string
+ *                             phone:
+ *                               type: string
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Failed to fetch bookings
+ */
+router.get('/bookings', getAllBookings);
 
 export default router;
