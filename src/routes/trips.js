@@ -1,15 +1,16 @@
-import { bookingPage, processBookingRequest } from './book.js';
-import confirmationPage from './confirm.js';
+import { bookingPage, processBookingRequest } from '../controllers/bookings.js';
+import bookingDetailsPage from './confirm.js';
 import { Router } from 'express';
 
 const router = Router();
 
-
-// Book ticket
+// Display booking form
 router.get('/booking/:scheduleId', bookingPage);
-router.post('/book', processBookingRequest);
 
-// Booking confirmation page
-router.get('/confirmation/:confirmationId', confirmationPage);
+// Create booking
+router.post('/booking', processBookingRequest);
+
+// Display completed booking
+router.get('/booking/details/:bookingId', bookingDetailsPage);
 
 export default router;

@@ -262,4 +262,62 @@ document.addEventListener('DOMContentLoaded', () => {
     hookTrainsCatalog();
     hookTripsCatalog();
     hookTripSchedules();
+    hookBookingsAdmin();
 });
+
+const hookBookingsAdmin = async () => {
+    const sectionEl = document.getElementById('bookings-admin');
+
+    if (!sectionEl) {
+        return;
+    }
+
+    const listEl = sectionEl.querySelector('#bookings-list');
+    const templateEl = sectionEl.querySelector('#booking-template');
+    const loadingEl = sectionEl.querySelector('#bookings-loading');
+    const emptyEl = sectionEl.querySelector('#bookings-empty');
+    const errorEl = sectionEl.querySelector('#bookings-error');
+
+    try {
+        const response = await fetch('/api/bookings');
+        if (!response.ok) {
+            throw new Error(`Failed to load bookings`);
+        }
+
+        const { bookings } = await response.json();
+
+        if (bookings.length === 0) {
+            emptyEl.hidden = false;
+            return;
+        }
+        
+        const fragment = document.createDocumentFragment();
+
+        bookings.forEach((booking) => {
+            const clone = templateEl.content.cloneNode(true);
+
+            clone.querySelector('.booking-id').textContent = booking.id;
+            clone.querySelector('.booking-trip').textContent = booking.tripId;
+            clone.querySelector('.booking-schedule').textContent = booking.scheduleId;
+            clone.querySelector('.booking-class').textContent = booking.ticketClass;
+            clone.querySelector('.booking-day').textContent = booking.selectedDay;
+            clone.querySelector('.booking-date').textContent = booking.createdAt;
+
+            const passengersEl = clone.querySelector('.booking-passengers');
+            booking.passengers.forEach((passenger) => {
+                const li = document.createElement('li');
+                li.textContent = `${passenger.firstName} ${passenger.lastName}`;
+                passengersEl.appendChild(li);
+            });
+
+            fragment.appendChild(clone);
+        });
+
+        listEl.replaceChildren(fragment);
+    } catch (error) {
+        console.error('Error loading bookings', error);
+        errorEl.hidden = false;
+    } finally {
+        loadingEl.hidden = true;
+    }
+};
