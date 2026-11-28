@@ -57,8 +57,7 @@ const processBookingRequest = async (req, res) => {
             passengers: req.body.passengers
         });
 
-        return res.redirect(`/trips/booking/${booking.id}`);
-    } catch (error) {
+        return res.redirect(`/trips/booking/details/${booking.id}`);    } catch (error) {
         console.error('Error processing booking request:', error);
 
         if (error.name === 'ValidationError') {
@@ -70,8 +69,6 @@ const processBookingRequest = async (req, res) => {
         return res.status(500).json({
             message: 'Failed to process booking request'
         });
-
-        return res.redirect(`/trips/booking/details/${booking.id}`);
     }
 };
 

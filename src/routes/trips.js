@@ -4,11 +4,13 @@ import { Router } from 'express';
 
 const router = Router();
 
-// Book ticket
+// Display booking form
 router.get('/booking/:scheduleId', bookingPage);
+
+// Create booking
 router.post('/booking', processBookingRequest);
 
-// Booking details page
+// Display completed booking
 router.get('/booking/details/:bookingId', bookingDetailsPage);
 
 export default router;

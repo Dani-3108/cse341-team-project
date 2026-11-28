@@ -1,9 +1,9 @@
-import { getDb } from '../db/connect.js';
+import { getBookingById } from '../models/bookings.js';
 
 export default async (req, res) => {
     const { bookingId } = req.params;
 
-    const booking = await getDb().collection('bookings').findOne({ id: bookingId });
+    const booking = await getBookingById(bookingId);
 
     res.render('trips/confirm', {
         title: 'Trip booking',

@@ -297,10 +297,10 @@ const hookBookingsAdmin = async () => {
             const clone = templateEl.content.cloneNode(true);
 
             clone.querySelector('.booking-id').textContent = booking.id;
-            clone.querySelector('.booking-trip').textContent = booking.trip;
-            clone.querySelector('.booking-schedule').textContent = booking.schedule;
-            clone.querySelector('.booking-class').textContent = booking.class;
-            clone.querySelector('.booking-day').textContent = booking.day;
+            clone.querySelector('.booking-trip').textContent = booking.tripId;
+            clone.querySelector('.booking-schedule').textContent = booking.scheduleId;
+            clone.querySelector('.booking-class').textContent = booking.ticketClass;
+            clone.querySelector('.booking-day').textContent = booking.selectedDay;
             clone.querySelector('.booking-date').textContent = booking.createdAt;
 
             const passengersEl = clone.querySelector('.booking-passengers');
